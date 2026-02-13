@@ -457,7 +457,7 @@
             </div>
 
             <div class="sidebar-actions">
-                <button class="sidebar-button">
+                <button class="sidebar-button" onclick="startNewChat()">
                     <img src="Edit-pen.png" alt="New Chat">
                     <span>New Chat</span>
                 </button>
@@ -471,7 +471,7 @@
                 </button>
             </div>
 
-            <div class="chat-history">
+            <div class="chat-history" id="chatHistory">
                 <div class="chat-history-title">Chat History</div>
                 <div class="chat-item">Revenue Performance vs. Targ...</div>
                 <div class="chat-item">Saturday Revenue Decline Ana...</div>
@@ -534,7 +534,7 @@
                         </div>
 
                         <!-- Card 2: Support Create Case -->
-                        <div class="suggestion-card" onclick="window.location.href='shift4-ai-chat-v2.html'">
+                        <div class="suggestion-card" onclick="window.location.href='shift4-ai-chat-v2-new.html'">
                             <div class="suggestion-badge action">Action Needed</div>
                             <div class="suggestion-icon action">
                                 <span class="material-icons">campaign</span>
@@ -631,6 +631,38 @@
                 // Here you would navigate to the chat with this suggestion
             });
         });
+
+        // Start new chat - just reload the homepage (already on homepage)
+        function startNewChat() {
+            window.location.href = 'index.html';
+        }
+
+        // Load chat history from localStorage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChatHistory();
+        });
+
+        // Load chat history from localStorage
+        function loadChatHistory() {
+            const chatHistoryData = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+            const chatHistory = document.getElementById('chatHistory');
+            const historyTitle = chatHistory.querySelector('.chat-history-title');
+
+            // If there are saved chats, add them at the top
+            if (chatHistoryData.length > 0) {
+                // Clear existing items except title
+                const existingItems = chatHistory.querySelectorAll('.chat-item');
+                existingItems.forEach(item => item.remove());
+
+                // Add saved chats from localStorage
+                chatHistoryData.forEach(chat => {
+                    const chatItem = document.createElement('div');
+                    chatItem.className = 'chat-item';
+                    chatItem.textContent = chat.title;
+                    chatHistory.appendChild(chatItem);
+                });
+            }
+        }
     </script>
 </body>
 </html>
