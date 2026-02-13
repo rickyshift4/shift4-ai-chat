@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekend Sales Analysis - SHIFT4 AI Chat</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #ffffff;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .logo {
+            padding: 0 20px 24px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 24px;
+            width: auto;
+        }
+
+        .sidebar-actions {
+            padding: 0 12px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+            transition: background 0.15s ease;
+            text-align: left;
+        }
+
+        .sidebar-button:hover {
+            background: #f5f5f5;
+        }
+
+        .sidebar-button .material-icons,
+        .sidebar-button img {
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            color: #1a1a1a;
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 12px;
+        }
+
+        .chat-history-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #737373;
+            padding: 8px 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-item {
+            position: relative;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #525252;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: background 0.15s ease;
+        }
+
+        .chat-item:hover {
+            background: #f5f5f5;
+        }
+
+        .chat-item.active {
+            background: #e0e7ff;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+        }
+
+        .restaurant-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #fafafa;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #1a1a1a;
+        }
+
+        .restaurant-selector .material-icons {
+            font-size: 18px;
+            color: #737373;
+        }
+
+        .restaurant-name {
+            font-weight: 500;
+        }
+
+        .restaurant-id {
+            color: #737373;
+            margin-left: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease;
+        }
+
+        .icon-button:hover {
+            background: #f5f5f5;
+        }
+
+        .icon-button .material-icons {
+            font-size: 22px;
+            color: #525252;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            object-fit: cover;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .message {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .message-content {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .message-content p {
+            margin-bottom: 16px;
+        }
+
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .message-content strong {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .message-content ul {
+            margin: 16px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .message-content ul li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .message-content ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+
+        .artifacts-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #f0f4ff;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .artifacts-section:hover {
+            background: #e5edff;
+        }
+
+        .artifacts-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .artifacts-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .artifacts-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 24px;
+            padding: 0 8px;
+            background: #2563eb;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .artifacts-section .material-icons {
+            font-size: 20px;
+            color: #525252;
+        }
+
+        /* Input Area */
+        .input-area {
+            padding: 20px 24px 24px;
+        }
+
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 30px;
+            transition: all 0.15s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .add-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .add-button .material-icons {
+            font-size: 24px;
+            color: #737373;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: 'Nunito Sans', sans-serif;
+            color: #1a1a1a;
+            outline: none;
+            resize: none;
+            max-height: 120px;
+            line-height: 1.5;
+            padding: 2px 0;
+        }
+
+        .chat-input::placeholder {
+            color: #a3a3a3;
+        }
+
+        .send-button {
+            background: #737373;
+            border: none;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.15s ease;
+        }
+
+        .send-button:hover {
+            background: #525252;
+        }
+
+        .send-button .material-icons {
+            font-size: 20px;
+            color: white;
+        }
+
+        /* Artifacts Panel - Same as v2 */
+        .artifacts-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 700px;
+            height: 100vh;
+            background: #f5f5f5;
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .artifacts-panel.open {
+            transform: translateX(0);
+        }
+
+        .artifacts-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            background: #f5f5f5;
+        }
+
+        .artifacts-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .artifacts-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .close-button .material-icons {
+            font-size: 24px;
+            color: #525252;
+        }
+
+        .artifacts-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .artifacts-nav {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .artifacts-nav-item {
+            padding: 20px;
+            border-radius: 12px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .artifacts-nav-item:hover {
+            background: #fafafa;
+        }
+
+        .artifacts-nav-item.active {
+            background: #dbeafe;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .artifacts-nav-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .artifacts-nav-icon .material-icons {
+            font-size: 24px;
+            color: white;
+        }
+
+        .artifacts-nav-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .artifacts-nav-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .artifacts-nav-type {
+            font-size: 12px;
+            color: #737373;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .artifact-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .artifact-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .artifact-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .artifact-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .artifact-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #d1fae5;
+            color: #065f46;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .artifact-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #737373;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .artifact-data-container {
+            margin-top: 12px;
+        }
+
+        .artifact-data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .artifact-data-row:first-child {
+            padding-top: 0;
+        }
+
+        .artifact-data-row:last-child {
+            padding-bottom: 0;
+        }
+
+        .artifact-data-label {
+            font-size: 14px;
+            color: #525252;
+        }
+
+        .artifact-data-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .artifact-data-value.negative {
+            color: #dc2626;
+        }
+
+        .artifact-data-value.positive {
+            color: #059669;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 200px;
+            background: #f9fafb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a3a3a3;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="Logo.png" alt="SHIFT4">
+            </div>
+
+            <div class="sidebar-actions">
+                <button class="sidebar-button" onclick="window.location.href='shift4-ai-chat-home.html'">
+                    <img src="Edit-pen.png" alt="New Chat">
+                    <span>New Chat</span>
+                </button>
+                <button class="sidebar-button">
+                    <span class="material-icons">search</span>
+                    <span>Search Chat</span>
+                </button>
+                <button class="sidebar-button">
+                    <span class="material-icons">support</span>
+                    <span>Support</span>
+                </button>
+            </div>
+
+            <div class="chat-history">
+                <div class="chat-history-title">Chat History</div>
+                <div class="chat-item active">Weekend Sales Analysis</div>
+                <div class="chat-item">Revenue Performance vs. Targ...</div>
+                <div class="chat-item">Saturday Revenue Decline Ana...</div>
+                <div class="chat-item">Revenue Performance vs. Fore...</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="restaurant-selector">
+                    <span class="material-icons">location_on</span>
+                    <span class="restaurant-name">Peter's Grill Brooklyn</span>
+                    <span class="restaurant-id">0021341010</span>
+                    <span class="material-icons">expand_more</span>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-button">
+                        <span class="material-icons">notifications</span>
+                    </button>
+                    <img src="Ellipse.png" alt="User" class="user-avatar">
+                </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div class="message">
+                    <div class="message-content">
+                        <p>I've analyzed your weekend sales performance and identified a significant decline. Here's what I found:</p>
+
+                        <p><strong>Saturday Sales Down 18%</strong></p>
+
+                        <p>Your Saturday revenue dropped <strong>$2,847</strong> compared to last week, representing an 18% decline. This is concerning as Saturdays are typically your busiest day.</p>
+
+                        <p><strong>Key Findings:</strong></p>
+                        <ul>
+                            <li><strong>Lunch service:</strong> Down 22% ($1,560 loss)</li>
+                            <li><strong>Dinner service:</strong> Down 15% ($1,287 loss)</li>
+                            <li><strong>Customer count:</strong> Decreased by 42 covers</li>
+                            <li><strong>Average check:</strong> Remained stable at $34.50</li>
+                        </ul>
+
+                        <p><strong>Potential Causes:</strong></p>
+                        <ul>
+                            <li>Local street fair on neighboring block (reduced foot traffic)</li>
+                            <li>Two key servers called out sick</li>
+                            <li>Delivery platform experienced outage (2PM-4PM)</li>
+                        </ul>
+
+                        <p><strong>Recommendations:</strong></p>
+                        <ul>
+                            <li>Monitor this weekend's performance for trend confirmation</li>
+                            <li>Consider promotional offers to recapture lost customers</li>
+                            <li>Ensure adequate staffing for upcoming weekends</li>
+                            <li>Add backup delivery platform integration</li>
+                        </ul>
+
+                        <p>View the detailed analytics in the artifacts panel to see hourly breakdowns and comparisons.</p>
+                    </div>
+                </div>
+
+                <div class="message">
+                    <div class="artifacts-section" onclick="toggleArtifactsPanel()">
+                        <div class="artifacts-left">
+                            <span class="artifacts-label">Artifacts</span>
+                            <span class="artifacts-badge">2</span>
+                        </div>
+                        <span class="material-icons">chevron_right</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <button class="add-button">
+                            <span class="material-icons">add</span>
+                        </button>
+                        <textarea class="chat-input" placeholder="Ask anything about your restaurant" rows="1"></textarea>
+                        <button class="send-button">
+                            <span class="material-icons">arrow_upward</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Artifacts Panel -->
+    <div id="artifactsPanel" class="artifacts-panel">
+        <div class="artifacts-header">
+            <div class="artifacts-header-left">
+                <h2 class="artifacts-title">Artifacts (2)</h2>
+            </div>
+            <button class="close-button" onclick="toggleArtifactsPanel()">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+
+        <div class="artifacts-content">
+            <!-- Navigation Cards -->
+            <div class="artifacts-nav">
+                <button class="artifacts-nav-item active" onclick="showArtifact(1)">
+                    <div class="artifacts-nav-icon">
+                        <span class="material-icons">trending_down</span>
+                    </div>
+                    <div class="artifacts-nav-content">
+                        <div class="artifacts-nav-title">Weekend Sales Comparison</div>
+                        <div class="artifacts-nav-type">Analysis</div>
+                    </div>
+                </button>
+                <button class="artifacts-nav-item" onclick="showArtifact(2)">
+                    <div class="artifacts-nav-icon">
+                        <span class="material-icons">assessment</span>
+                    </div>
+                    <div class="artifacts-nav-content">
+                        <div class="artifacts-nav-title">Contributing Factors</div>
+                        <div class="artifacts-nav-type">Report</div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Artifact 1: Sales Comparison -->
+            <div class="artifact-section" id="artifact1" style="margin: 0 24px 24px 24px;">
+                <div class="artifact-header">
+                    <h3 class="artifact-title">Weekend Sales Comparison</h3>
+                    <span class="artifact-type">
+                        <span class="material-icons" style="font-size: 16px;">trending_down</span>
+                        Analysis
+                    </span>
+                </div>
+
+                <div class="artifact-section-title">Week-over-Week Comparison</div>
+                <div class="artifact-data-container">
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Previous Saturday Revenue</span>
+                        <span class="artifact-data-value">$15,835</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">This Saturday Revenue</span>
+                        <span class="artifact-data-value negative">$12,988</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Difference</span>
+                        <span class="artifact-data-value negative">-$2,847 (-18%)</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Total Covers</span>
+                        <span class="artifact-data-value negative">376 (-42)</span>
+                    </div>
+                </div>
+
+                <div class="artifact-section-title" style="margin-top: 20px;">Service Period Breakdown</div>
+                <div class="artifact-data-container">
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Lunch (11AM-3PM)</span>
+                        <span class="artifact-data-value negative">-$1,560 (-22%)</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Dinner (5PM-10PM)</span>
+                        <span class="artifact-data-value negative">-$1,287 (-15%)</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Late Night (10PM-Close)</span>
+                        <span class="artifact-data-value positive">+$0 (0%)</span>
+                    </div>
+                </div>
+
+                <div class="chart-placeholder">
+                    Hourly Sales Comparison Chart
+                </div>
+            </div>
+
+            <!-- Artifact 2: Contributing Factors -->
+            <div class="artifact-section" id="artifact2" style="display: none; margin: 0 24px 24px 24px;">
+                <div class="artifact-header">
+                    <h3 class="artifact-title">Contributing Factors</h3>
+                    <span class="artifact-type">
+                        <span class="material-icons" style="font-size: 16px;">info</span>
+                        Report
+                    </span>
+                </div>
+
+                <div class="artifact-section-title">External Factors</div>
+                <div class="artifact-data-container">
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Local Street Fair</span>
+                        <span class="artifact-data-value negative">High Impact</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Weather Conditions</span>
+                        <span class="artifact-data-value">Normal (72°F, Sunny)</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Competing Events</span>
+                        <span class="artifact-data-value negative">2 nearby venues</span>
+                    </div>
+                </div>
+
+                <div class="artifact-section-title" style="margin-top: 20px;">Operational Factors</div>
+                <div class="artifact-data-container">
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Staff Callouts</span>
+                        <span class="artifact-data-value negative">2 servers (Emily, Josh)</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Delivery Platform Outage</span>
+                        <span class="artifact-data-value negative">2PM-4PM (2 hours)</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Kitchen Efficiency</span>
+                        <span class="artifact-data-value positive">Normal (18 min avg)</span>
+                    </div>
+                </div>
+
+                <div class="artifact-section-title" style="margin-top: 20px;">Recommended Actions</div>
+                <div class="artifact-data-container">
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Monitor Next Weekend</span>
+                        <span class="artifact-data-value">Priority 1</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Staff Coverage Plan</span>
+                        <span class="artifact-data-value">Priority 2</span>
+                    </div>
+                    <div class="artifact-data-row">
+                        <span class="artifact-data-label">Backup Delivery Integration</span>
+                        <span class="artifact-data-value">Priority 3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show specific artifact
+        function showArtifact(artifactNum) {
+            // Hide all artifacts
+            document.getElementById('artifact1').style.display = 'none';
+            document.getElementById('artifact2').style.display = 'none';
+
+            // Remove active class from all nav items
+            document.querySelectorAll('.artifacts-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected artifact
+            document.getElementById('artifact' + artifactNum).style.display = 'block';
+
+            // Add active class to selected nav item
+            event.target.closest('.artifacts-nav-item').classList.add('active');
+        }
+
+        // Toggle artifacts panel
+        function toggleArtifactsPanel() {
+            const panel = document.getElementById('artifactsPanel');
+            panel.classList.toggle('open');
+        }
+
+        // Auto-resize textarea
+        const textarea = document.querySelector('.chat-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send button functionality
+        document.querySelector('.send-button').addEventListener('click', function() {
+            const input = document.querySelector('.chat-input');
+            if (input.value.trim()) {
+                console.log('Sending message:', input.value);
+                input.value = '';
+                input.style.height = 'auto';
+            }
+        });
+
+        // Enter key to send
+        textarea.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.querySelector('.send-button').click();
+            }
+        });
+    </script>
+</body>
+</html>
