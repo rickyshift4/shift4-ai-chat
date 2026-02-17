@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Artifacts</title>
+    <style>
+        .artifact-card {
+            border: 1px solid #ccc;
+            margin: 10px;
+            overflow: hidden;
+        }
+        .artifact-card-header {
+            padding: 20px;
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+        .artifact-card-content {
+            display: none;
+        }
+        .artifact-card.expanded .artifact-card-content {
+            display: block;
+        }
+        .artifact-card-body {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Artifacts</h1>
+    
+    <div class="artifact-card">
+        <div class="artifact-card-header" onclick="toggleArtifactCard(0)">
+            Click to expand Card 1
+        </div>
+        <div class="artifact-card-content">
+            <div class="artifact-card-body">
+                Content for card 1
+            </div>
+        </div>
+    </div>
+    
+    <div class="artifact-card">
+        <div class="artifact-card-header" onclick="toggleArtifactCard(1)">
+            Click to expand Card 2
+        </div>
+        <div class="artifact-card-content">
+            <div class="artifact-card-body">
+                Content for card 2
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleArtifactCard(index) {
+            const cards = document.querySelectorAll('.artifact-card');
+            const clickedCard = cards[index];
+            
+            if (!clickedCard) return;
+            
+            const wasExpanded = clickedCard.classList.contains('expanded');
+            
+            // Close all cards
+            cards.forEach(card => {
+                card.classList.remove('expanded');
+            });
+            
+            // If wasn't expanded, expand it
+            if (!wasExpanded) {
+                clickedCard.classList.add('expanded');
+            }
+            
+            console.log('Card', index, 'is now', clickedCard.classList.contains('expanded') ? 'expanded' : 'collapsed');
+        }
+    </script>
+</body>
+</html>

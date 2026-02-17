@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIFT4 AI Chat - V2.1</title>
+    <title>SHIFT4 AI Chat - V2 Fixed</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <!-- Updated: 2026-02-13 09:25 - Fixed accordion JS -->
     <style>
         * {
             margin: 0;
@@ -717,7 +716,7 @@
             display: flex;
         }
 
-        /* Artifacts List - Updated v2.1 */
+        /* Artifacts List */
         .artifacts-list {
             flex: 1;
             overflow-y: auto;
@@ -730,7 +729,7 @@
             margin-bottom: 12px;
             transition: all 0.2s ease;
             border: 1px solid #e5e5e5;
-            overflow: hidden !important;
+            overflow: hidden;
         }
 
         .artifact-card:last-child {
@@ -809,16 +808,23 @@
         }
 
         .artifact-card-content {
-            display: none !important;
+            display: none;
+            overflow: hidden;
         }
 
         .artifact-card.expanded .artifact-card-content {
-            display: block !important;
+            display: block;
         }
 
         .artifact-card-body {
             padding: 20px;
-            background: #fafafa;
+        }
+
+        .artifact-detail {
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            margin-bottom: 0;
         }
 
         .artifact-header {
@@ -847,18 +853,14 @@
         }
 
         .artifact-section {
-            background: #ffffff;
+            background: #f9fafb;
             border-radius: 8px;
             padding: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         .artifact-section:last-child {
             margin-bottom: 0;
-        }
-
-        .artifact-section:first-child {
-            margin-top: 0;
         }
 
         .artifact-section-title {
@@ -1507,6 +1509,7 @@
 
         // Toggle artifact card expansion (accordion - only one open at a time)
         function toggleArtifactCard(index) {
+            event.stopPropagation();
             const cards = document.querySelectorAll('.artifact-card');
             const clickedCard = cards[index];
 
@@ -1514,7 +1517,7 @@
 
             const wasExpanded = clickedCard.classList.contains('expanded');
 
-            // Close all cards first
+            // Close all cards
             cards.forEach(card => {
                 card.classList.remove('expanded');
             });
@@ -1523,8 +1526,6 @@
             if (!wasExpanded) {
                 clickedCard.classList.add('expanded');
             }
-
-            console.log('Toggled card', index, 'expanded:', !wasExpanded);
         }
 
         // Toggle artifacts panel
