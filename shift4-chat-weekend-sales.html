@@ -416,12 +416,9 @@
             color: #525252;
         }
 
-        /* Artifacts Button (above input) */
+        /* Artifacts Button (now inline with chips) */
         .artifacts-button-container {
-            max-width: 800px;
-            margin: 0 auto 12px auto;
-            display: flex;
-            justify-content: flex-end;
+            flex-shrink: 0;
         }
 
         .artifacts-main-button {
@@ -437,6 +434,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.15s ease;
+            white-space: nowrap;
         }
 
         .artifacts-main-button:hover {
@@ -490,8 +488,21 @@
         .suggested-questions {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            align-items: center;
             margin-bottom: 12px;
+        }
+
+        .question-chips-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            flex: 1;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .question-chips-container::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
         }
 
         .question-chip {
@@ -504,6 +515,8 @@
             cursor: pointer;
             transition: all 0.15s ease;
             font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .question-chip:hover {
@@ -1099,18 +1112,19 @@
 
             <!-- Input Area -->
             <div class="input-area">
-                <!-- Artifacts Button (above input) -->
-                <div class="artifacts-button-container">
-                    <button id="artifactsMainButton" class="artifacts-main-button" onclick="toggleArtifactsPanel()" style="background: black; color: white;">
-                        <span class="material-icons" style="font-size: 20px;">description</span>
-                        Proof
-                        <span class="artifacts-count" id="artifactsCount" style="background: #0e5bf3;">2</span>
-                    </button>
-                </div>
-
                 <!-- Suggested Actions -->
                 <div class="suggested-actions" id="suggestedActions">
-                    <div class="suggested-questions" id="suggestedQuestions"></div>
+                    <div class="suggested-questions">
+                        <div class="question-chips-container" id="suggestedQuestions"></div>
+                        <!-- Artifacts/Proof Button (inline with chips) -->
+                        <div class="artifacts-button-container">
+                            <button id="artifactsMainButton" class="artifacts-main-button" onclick="toggleArtifactsPanel()" style="background: black; color: white;">
+                                <span class="material-icons" style="font-size: 20px;">description</span>
+                                Proof
+                                <span class="artifacts-count" id="artifactsCount" style="background: #0e5bf3;">2</span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="suggested-main-actions" id="suggestedMainActions"></div>
                 </div>
 
