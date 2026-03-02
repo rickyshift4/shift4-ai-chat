@@ -6,6 +6,7 @@
     <title>Terminal Status - SHIFT4 AI Chat</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
     <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
     <style>
         * {
@@ -32,7 +33,7 @@
         /* Sidebar */
         .sidebar {
             width: 280px;
-            background: transparent;
+            background: #fafafa;
             border-radius: 16px;
             display: flex;
             flex-direction: column;
@@ -128,16 +129,28 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: #ffffff;
+            background: transparent;
             border-radius: 16px;
             overflow: hidden;
+            position: relative;
         }
 
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 24px;
+            padding: 16px 24px 60px 24px;
+            background: linear-gradient(to top, rgba(245, 245, 245, 0) 0%, rgba(245, 245, 245, 0.95) 40%, rgba(245, 245, 245, 1) 70%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .header > * {
+            pointer-events: auto;
         }
 
         .restaurant-selector {
@@ -206,9 +219,12 @@
             flex: 1;
             overflow-y: auto;
             padding: 24px;
+            padding-top: 120px;
+            padding-bottom: 220px;
             display: flex;
             flex-direction: column;
             gap: 24px;
+            background: transparent;
         }
 
         .message {
@@ -218,7 +234,7 @@
         }
 
         .message-content {
-            background: #f9fafb;
+            background: #ffffff;
             border-radius: 12px;
             padding: 20px;
             line-height: 1.6;
@@ -259,20 +275,16 @@
             font-weight: bold;
         }
 
-        .artifact-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+        .message-content .artifact-link {
             color: #2563eb;
             text-decoration: underline;
-            font-weight: 500;
-            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.15s ease;
         }
 
-        .artifact-link:hover {
+        .message-content .artifact-link:hover {
             color: #1d4ed8;
         }
-
 
         .message-content ol {
             margin: 16px 0;
@@ -331,6 +343,65 @@
             color: #525252;
         }
 
+        /* Message Feedback */
+        .message-feedback {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #f5f5f5;
+        }
+
+        .feedback-text {
+            font-size: 14px;
+            color: #737373;
+        }
+
+        .feedback-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s ease;
+        }
+
+        .feedback-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .feedback-btn .material-icons {
+            font-size: 20px;
+            color: #737373;
+        }
+
+        .feedback-btn .material-icons-outlined {
+            font-size: 20px;
+            color: #737373;
+        }
+
+        .feedback-btn.active .material-icons-outlined {
+            display: none;
+        }
+
+        .feedback-btn.active .material-icons {
+            color: #2563eb;
+        }
+
+        .feedback-btn:not(.active) .material-icons {
+            display: none;
+        }
+
         /* Action Button */
         .action-button {
             display: inline-flex;
@@ -358,12 +429,9 @@
             transform: scale(0.98);
         }
 
-        /* Artifacts Button (above input) */
+        /* Artifacts Button (inline with chips) */
         .artifacts-button-container {
-            max-width: 800px;
-            margin: 0 auto 12px auto;
-            display: flex;
-            justify-content: flex-end;
+            flex-shrink: 0;
         }
 
         .artifacts-main-button {
@@ -371,7 +439,7 @@
             align-items: center;
             gap: 8px;
             padding: 8px 16px;
-            background: #2563eb;
+            background: black;
             color: white;
             border: none;
             border-radius: 20px;
@@ -379,10 +447,11 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.15s ease;
+            white-space: nowrap;
         }
 
         .artifacts-main-button:hover {
-            background: #1d4ed8;
+            background: #1a1a1a;
         }
 
         .artifacts-main-button .artifacts-count {
@@ -404,7 +473,17 @@
 
         /* Input Area */
         .input-area {
-            padding: 0 24px 24px;
+            padding: 60px 24px 24px;
+            background: linear-gradient(to bottom, rgba(245, 245, 245, 0) 0%, rgba(245, 245, 245, 0.95) 40%, rgba(245, 245, 245, 1) 70%);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+        }
+
+        .input-area > * {
+            pointer-events: auto;
         }
 
         .input-container {
@@ -442,6 +521,7 @@
         .add-button .material-icons {
             font-size: 24px;
             color: #737373;
+            transform: rotate(45deg);
         }
 
         .chat-input {
@@ -876,44 +956,54 @@
 
         .suggested-questions {
             display: flex;
-            flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 8px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .question-chips-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            flex: 1;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .question-chips-container::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
         }
 
         .question-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 14px;
-            background: #ffffff;
-            border: 1px solid #e5e5e5;
+            padding: 8px 16px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #525252;
+            font-size: 14px;
+            color: #2563eb;
             cursor: pointer;
             transition: all 0.15s ease;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .question-chip:hover {
-            background: #f9fafb;
-            border-color: #d4d4d4;
-            color: #1a1a1a;
+            background: #dbeafe;
+            border-color: #93c5fd;
         }
 
         .suggested-main-actions {
             display: flex;
-            flex-wrap: wrap;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .action-chip {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
             border: none;
@@ -921,7 +1011,7 @@
 
         .action-chip.primary {
             background: #2563eb;
-            color: white;
+            color: #ffffff;
         }
 
         .action-chip.primary:hover {
@@ -930,14 +1020,13 @@
 
         .action-chip.secondary {
             background: #ffffff;
-            color: #374151;
-            border: 1px solid #4b5563;
+            color: #525252;
+            border: 1px solid #e5e5e5;
         }
 
         .action-chip.secondary:hover {
             background: #f9fafb;
-            border-color: #1f2937;
-            color: #1f2937;
+            border-color: #d4d4d4;
         }
     </style>
 </head>
@@ -958,6 +1047,13 @@
                     <span class="material-icons">search</span>
                     <span>Search Chat</span>
                 </button>
+                <button class="sidebar-button" style="justify-content: space-between;">
+                    <span style="display: flex; align-items: center; gap: 12px;">
+                        <span class="material-icons-outlined">location_on</span>
+                        <span>Peter's Grill Brooklyn</span>
+                    </span>
+                    <span class="material-icons" style="color: #737373; font-size: 18px;">expand_more</span>
+                </button>
                 <button class="sidebar-button">
                     <span class="material-icons">support</span>
                     <span>Support</span>
@@ -977,12 +1073,7 @@
         <div class="main-content">
             <!-- Header -->
             <div class="header">
-                <div class="restaurant-selector">
-                    <span class="material-icons">location_on</span>
-                    <span class="restaurant-name">Peter's Grill Brooklyn</span>
-                    <span class="restaurant-id">0021341010</span>
-                    <span class="material-icons">expand_more</span>
-                </div>
+                <div></div>
                 <div class="header-actions">
                     <button class="icon-button">
                         <span class="material-icons">notifications</span>
@@ -1016,8 +1107,18 @@
 
                         <p>You can also review the <a href="#" class="artifact-link" onclick="openArtifact(event, 1)">Performance Analytics</a> for detailed insights.</p>
 
-                        <div style="margin-top: 20px;">
-                            <button class="action-button">Check other terminals</button>
+                        <div class="message-feedback">
+                            <span class="feedback-text">Was this response helpful?</span>
+                            <div class="feedback-buttons">
+                                <button class="feedback-btn" onclick="toggleFeedback(this, 'up')">
+                                    <span class="material-icons-outlined">thumb_up</span>
+                                    <span class="material-icons">thumb_up</span>
+                                </button>
+                                <button class="feedback-btn" onclick="toggleFeedback(this, 'down')">
+                                    <span class="material-icons-outlined">thumb_down</span>
+                                    <span class="material-icons">thumb_down</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1026,24 +1127,25 @@
 
             <!-- Input Area -->
             <div class="input-area">
-                <!-- Artifacts Button (above input) -->
-                <div class="artifacts-button-container">
-                    <button id="artifactsMainButton" class="artifacts-main-button" onclick="toggleArtifactsPanel()">
-                        Artifacts
-                        <span class="artifacts-count" id="artifactsCount">2</span>
-                    </button>
-                </div>
-
                 <!-- Suggested Actions -->
                 <div class="suggested-actions" id="suggestedActions" style="display: none;">
-                    <div class="suggested-questions" id="suggestedQuestions"></div>
+                    <div class="suggested-questions">
+                        <div class="question-chips-container" id="suggestedQuestions"></div>
+                        <!-- Artifacts Button (inline with chips) -->
+                        <div class="artifacts-button-container">
+                            <button id="artifactsMainButton" class="artifacts-main-button" onclick="toggleArtifactsPanel()" style="background: black; color: white;">
+                                Artifacts
+                                <span class="artifacts-count" id="artifactsCount">2</span>
+                            </button>
+                        </div>
+                    </div>
                     <div class="suggested-main-actions" id="suggestedMainActions"></div>
                 </div>
 
                 <div class="input-container">
                     <div class="input-wrapper">
                         <button class="add-button">
-                            <span class="material-icons">add</span>
+                            <span class="material-icons">attach_file</span>
                         </button>
                         <textarea class="chat-input" placeholder="Ask anything about your restaurant" rows="1"></textarea>
                         <button class="send-button">
@@ -1221,6 +1323,22 @@
     </div>
 
     <script>
+        // Toggle feedback buttons
+        function toggleFeedback(button, type) {
+            const feedbackContainer = button.parentElement;
+            const allButtons = feedbackContainer.querySelectorAll('.feedback-btn');
+
+            // If clicking the same button, toggle it off
+            if (button.classList.contains('active')) {
+                button.classList.remove('active');
+            } else {
+                // Remove active from all buttons in this container
+                allButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active to clicked button
+                button.classList.add('active');
+            }
+        }
+
         // Toggle artifact card expansion (accordion - only one open at a time)
         function toggleArtifactCard(index) {
             const cards = document.querySelectorAll('.artifact-card');
