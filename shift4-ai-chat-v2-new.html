@@ -1740,7 +1740,7 @@
     <!-- Search Chat Modal -->
     <div id="searchChatModal" class="search-modal">
         <div class="search-modal-backdrop" onclick="closeSearchModal()"></div>
-        <div class="search-modal-content">
+        <div class="search-modal-content" style="position: fixed !important; top: 80px !important; left: 50% !important; transform: translateX(-50%) !important; width: 90% !important; max-width: 800px !important; z-index: 100001 !important;">
             <div class="search-modal-header">
                 <input type="text" class="search-modal-input" placeholder="Search chats..." id="searchChatInput" oninput="filterChats()">
                 <button class="search-modal-close" onclick="closeSearchModal()">
