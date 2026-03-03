@@ -1992,11 +1992,18 @@
                 const modal = document.getElementById('searchChatModal');
                 const modalContent = modal.querySelector('.search-modal-content');
 
-                // Force position with JavaScript as backup
+                // Calculate center position based on viewport
+                const viewportWidth = window.innerWidth;
+                const modalWidth = 800; // max-width
+                const leftPosition = (viewportWidth - modalWidth) / 2;
+
+                // Force position with JavaScript using calculated pixels
                 modalContent.style.position = 'fixed';
                 modalContent.style.top = '80px';
-                modalContent.style.left = '50%';
-                modalContent.style.transform = 'translateX(-50%)';
+                modalContent.style.left = leftPosition + 'px';
+                modalContent.style.right = 'auto';
+                modalContent.style.transform = 'none';
+                modalContent.style.width = '800px';
                 modalContent.style.zIndex = '100001';
 
                 modal.classList.add('open');
