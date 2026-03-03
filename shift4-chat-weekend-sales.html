@@ -1090,10 +1090,7 @@
         }
 
         .search-modal.open {
-            display: flex !important;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 80px;
+            display: block !important;
             pointer-events: auto;
         }
 
@@ -1111,8 +1108,11 @@
         }
 
         .search-modal-content {
-            position: relative;
-            width: 100%;
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
             max-width: 800px;
             max-height: 80vh;
             background: white;
@@ -1122,7 +1122,7 @@
             flex-direction: column;
             overflow: hidden;
             pointer-events: auto;
-            z-index: 2;
+            z-index: 100001;
         }
 
         .search-modal-header {
