@@ -1731,13 +1731,25 @@
 
                 modal.classList.add('open');
                 document.getElementById('searchChatInput').focus();
+
+                // Add direct click listener to close button as backup
+                const closeBtn = document.querySelector('.search-modal-close');
+                if (closeBtn) {
+                    closeBtn.onclick = function(e) {
+                        console.log('Close button clicked via direct listener');
+                        e.stopPropagation();
+                        closeSearchModal();
+                    };
+                }
             }, 100);
         }
 
         // Close search modal
         function closeSearchModal() {
+            console.log('closeSearchModal called');
             const modal = document.getElementById('searchChatModal');
             modal.classList.remove('open');
+            modal.style.display = 'none';
             document.getElementById('searchChatInput').value = '';
             // Reset filter
             const items = document.querySelectorAll('.search-chat-item, .search-section');
