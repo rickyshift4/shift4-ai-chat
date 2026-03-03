@@ -1092,7 +1092,7 @@
             height: 100vh !important;
             background: rgba(0, 0, 0, 0.5) !important;
             pointer-events: auto !important;
-            z-index: 1 !important;
+            z-index: 10000 !important;
         }
 
         .search-modal-content {
@@ -1112,7 +1112,7 @@
             flex-direction: column !important;
             overflow: hidden !important;
             pointer-events: auto !important;
-            z-index: 100001 !important;
+            z-index: 10001 !important;
             margin: 0 !important;
         }
 
@@ -1152,7 +1152,7 @@
             transition: background 0.15s ease;
             pointer-events: auto !important;
             position: relative;
-            z-index: 100002;
+            z-index: 10002;
         }
 
         .search-modal-close:hover {
@@ -2050,7 +2050,7 @@
     <!-- Search Chat Modal -->
     <div id="searchChatModal" class="search-modal">
         <div class="search-modal-backdrop" onclick="closeSearchModal()"></div>
-        <div class="search-modal-content" style="position: fixed !important; top: 80px !important; left: 50% !important; transform: translateX(-50%) !important; width: 90% !important; max-width: 800px !important; z-index: 100001 !important;">
+        <div class="search-modal-content" style="position: fixed !important; top: 80px !important; left: 50% !important; transform: translateX(-50%) !important; width: 90% !important; max-width: 800px !important; z-index: 10001 !important;">
             <div class="search-modal-header">
                 <input type="text" class="search-modal-input" placeholder="Search chats..." id="searchChatInput" oninput="filterChats()">
                 <button class="search-modal-close" onclick="closeSearchModal()">
