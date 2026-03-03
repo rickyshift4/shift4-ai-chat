@@ -1688,6 +1688,12 @@
 
         // Open search modal
         function openSearchModal() {
+            // Close artifacts panel if open
+            const artifactsPanel = document.getElementById('artifactsPanel');
+            if (artifactsPanel && artifactsPanel.classList.contains('open')) {
+                toggleArtifactsPanel();
+            }
+
             const modal = document.getElementById('searchChatModal');
             modal.classList.add('open');
             document.getElementById('searchChatInput').focus();
